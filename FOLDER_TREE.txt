@@ -1,0 +1,129 @@
+compliance_checker/
+│
+├── backend/
+│   ├── app/
+│   │   ├── __init__.py                 # Flask app factory with CORS and MongoDB setup
+│   │   ├── config.py                   # Configuration class with environment variables
+│   │   ├── models.py                   # MongoDB models (ComplianceCheck, Evidence)
+│   │   │
+│   │   ├── blueprints/
+│   │   │   ├── __init__.py
+│   │   │   ├── api.py                  # Main API endpoints (/validate, /checks, /evidence)
+│   │   │   └── auth.py                 # Authentication stub (future implementation)
+│   │   │
+│   │   └── services/
+│   │       ├── __init__.py
+│   │       ├── scraper.py              # URL scraping with BeautifulSoup
+│   │       ├── metadata_checker.py     # Metadata validation (ffprobe/exiftool stubs)
+│   │       ├── label_checker.py        # Label detection (OpenCV/OCR stubs)
+│   │       ├── scoring.py              # Compliance score calculation
+│   │       └── ai_suggester.py         # Remediation suggestions (template-based, LLM plug-in point)
+│   │
+│   ├── evidence/                       # Auto-generated directory for evidence storage
+│   ├── .env.example                    # Environment variables template
+│   ├── requirements.txt                # Python dependencies
+│   └── run.py                          # Application entry point
+│
+├── frontend/
+│   ├── public/
+│   │   └── index.html                  # HTML template
+│   │
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── Header.jsx              # Navigation header
+│   │   │   ├── Footer.jsx              # Footer with links
+│   │   │   ├── QuestionForm.jsx        # 8-question form with URL inputs
+│   │   │   ├── ResultCard.jsx          # Compliance score and summary
+│   │   │   ├── EvidenceList.jsx        # Expandable evidence viewer
+│   │   │   └── ScoreBadge.jsx          # Circular score badge with colors
+│   │   │
+│   │   ├── pages/
+│   │   │   ├── Home.jsx                # Landing page with features
+│   │   │   ├── Questionnaire.jsx       # Questionnaire page with form
+│   │   │   ├── Results.jsx             # Results page with report
+│   │   │   └── CompanyDetails.jsx      # Historical check details
+│   │   │
+│   │   ├── services/
+│   │   │   └── api.js                  # API client with fetch wrappers
+│   │   │
+│   │   ├── App.js                      # Main app with routing
+│   │   ├── index.js                    # React entry point
+│   │   └── index.css                   # Global styles with Tailwind
+│   │
+│   ├── .env.example                    # Environment variables template
+│   ├── package.json                    # Node dependencies
+│   ├── postcss.config.js               # PostCSS config for Tailwind
+│   └── tailwind.config.js              # Tailwind CSS configuration
+│
+├── .gitignore                          # Git ignore file
+├── README.md                           # Project documentation
+└── FOLDER_TREE.txt                     # This file
+
+## Key Files Description
+
+### Backend
+
+**app/__init__.py**: Flask application factory that initializes MongoDB, CORS, and registers blueprints.
+
+**app/config.py**: Configuration class loading environment variables for MongoDB URI, secret keys, and evidence directory.
+
+**app/models.py**: MongoDB document models for storing compliance checks and evidence records.
+
+**app/blueprints/api.py**: Main API routes including:
+  - POST /api/validate: Accept questionnaire and run validation
+  - GET /api/checks/:id: Retrieve specific check
+  - GET /api/checks: List all checks
+  - GET /api/evidence/:id: Get evidence for check
+
+**app/services/scraper.py**: URL scraping with requests and BeautifulSoup. Extracts HTML text, meta tags, and finds labels. Includes stubs for headless scraping with Selenium.
+
+**app/services/metadata_checker.py**: Checks for AI disclosure in metadata. Includes stubs for ffprobe (video/audio) and exiftool (images) integration.
+
+**app/services/label_checker.py**: Detects visible AI labels in content. Includes stubs for OpenCV and OCR (tesseract) integration for visual detection.
+
+**app/services/scoring.py**: Calculates compliance score based on questionnaire answers, metadata checks, label checks, and policy validation. Returns detailed breakdown.
+
+**app/services/ai_suggester.py**: Generates remediation suggestions using templates. Includes plug-in point for LLM integration (OpenAI/Anthropic).
+
+**run.py**: Application entry point that creates and runs the Flask app.
+
+### Frontend
+
+**src/services/api.js**: API client with fetch wrappers for all backend endpoints. Includes error handling and base URL configuration.
+
+**src/components/QuestionForm.jsx**: Form component for 8 compliance questions with yes/no radio buttons and URL input fields.
+
+**src/components/ResultCard.jsx**: Displays compliance score, pass/fail status, and list of failed checks with severity indicators.
+
+**src/components/EvidenceList.jsx**: Expandable accordion showing evidence for metadata checks, label checks, and policy scans.
+
+**src/components/ScoreBadge.jsx**: Circular badge displaying compliance score with color coding (green 80+, yellow 60-79, red <60).
+
+**src/pages/Home.jsx**: Landing page with features, how-it-works section, and call-to-action.
+
+**src/pages/Questionnaire.jsx**: Main questionnaire page that collects company name, answers, and URLs, then submits to API.
+
+**src/pages/Results.jsx**: Results page displaying compliance report, suggestions, and evidence with print functionality.
+
+**src/pages/CompanyDetails.jsx**: View historical compliance check by ID.
+
+**src/App.js**: Main application component with React Router setup for all pages.
+
+## Installation Summary
+
+1. **Backend**:
+   - cd backend
+   - python -m venv venv && source venv/bin/activate
+   - pip install -r requirements.txt
+   - cp .env.example .env
+   - python run.py
+
+2. **Frontend**:
+   - cd frontend
+   - npm install
+   - cp .env.example .env
+   - npm start
+
+3. **MongoDB**: Ensure MongoDB is running on localhost:27017
+
+4. **Access**: Frontend at http://localhost:3000, Backend at http://localhost:5000
